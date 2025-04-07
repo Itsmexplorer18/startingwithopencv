@@ -1,0 +1,39 @@
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <iostream>
+
+using namespace cv;
+using namespace std;
+
+int main() {
+
+    string path = "Resources/test.png";
+    Mat img = imread(path);
+    Mat imagegray, imageblur, cannyimage1, cannyimage2,cannyimage3,imagedilate,erodeimage;
+    cvtColor(img, imagegray, COLOR_BGR2GRAY);
+    GaussianBlur(img, imageblur, Size(7, 7), 5, 0);
+    Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+    //Canny(imageblur, cannyimage1, 25, 75);    // picks up more edges, even faint ones
+    
+    Canny(imageblur, cannyimage1, 25, 75);
+    dilate(cannyimage1, imagedilate, kernel);
+    erode(cannyimage1, erodeimage, kernel);
+   // Canny(imageblur, cannyimage2, 250, 750);-->nothing
+   // Canny(imageblur, cannyimage3, 50, 100);
+   /* Smaller values → more edges(even noise).
+      Larger values → fewer, cleaner edges.*/
+    imshow("Image", img);
+    //imshow("image gray", imagegray);
+    //imshow("image blur", imageblur);
+   imshow("image canny1", cannyimage1);
+  /*  imshow("image canny2", cannyimage2);
+    imshow("image canny3", cannyimage3);*/
+   imshow("image dilated", imagedilate);
+   imshow("image eroded", erodeimage);
+
+
+
+    waitKey(0);
+
+}
